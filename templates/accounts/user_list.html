@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Пользователи | HR-Система{% endblock %}
+{% block header %}Управление пользователями{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Учетные записи кадровиков</h5>
+        <button class="btn btn-sm btn-primary"
+                hx-get="{% url 'user_add_modal' %}"
+                hx-target="#modal-container"
+                hx-on::after-request="bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-container')).show()">
+            <i class="bi bi-person-plus"></i> Добавить пользователя
+        </button>
+    </div>
+    <div class="card-body p-0" id="user-table-container">
+        {% include 'accounts/partials/user_table.html' %}
+    </div>
+</div>
+
+<!-- Контейнер для модалок -->
+<div class="modal fade" id="modal-container" tabindex="-1" aria-hidden="true"></div>
+
+<script>
+    document.body.addEventListener('closeModal', function() {
+        var modal = bootstrap.Modal.getInstance(document.getElementById('modal-container'));
+        if (modal) modal.hide();
+    });
+</script>
+{% endblock %}

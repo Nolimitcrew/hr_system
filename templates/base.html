@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Кадровый учет{% endblock %}</title>
+
+    <!-- Bootstrap 5 (CSS) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Иконки Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar { min-height: 100vh; background-color: #343a40; color: white; }
+        .sidebar a { color: rgba(255,255,255,.75); text-decoration: none; padding: 10px 15px; display: block; }
+        .sidebar a:hover { color: white; background-color: rgba(255,255,255,.1); }
+        .main-content { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковое меню -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <h4 class="text-center mb-4"><i class="bi bi-people-fill"></i> HR-Система</h4>
+                    <ul class="nav flex-column">
+    <li class="nav-item">
+        <a href="{% url 'home' %}"><i class="bi bi-speedometer2"></i> Главная</a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'employee_list' %}"><i class="bi bi-person-badge"></i> Сотрудники</a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'vacation_global_list' %}"><i class="bi bi-calendar-check"></i> Отпуска</a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'event_global_list' %}"><i class="bi bi-clock-history"></i> События</a>
+    </li>
+    <li class="nav-item">
+    <a href="{% url 'directories_list' %}"><i class="bi bi-journal-text"></i> Справочники</a>
+    </li>
+    <li class="nav-item">
+    <a href="{% url 'user_list' %}"><i class="bi bi-people-fill"></i> Пользователи</a>
+    </li>
+    <li class="nav-item">
+        <a href="/admin/"><i class="bi bi-gear"></i> Админ-панель</a>
+    </li>
+</ul>
+                </div>
+            </nav>
+
+            <!-- Основной контент -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <div class="d-flex align-items-center">
+                            <span class="me-3 text-muted small">Вы вошли как: <strong>{{ user.username }}</strong></span>
+                              <form action="{% url 'logout' %}" method="post" class="d-inline">
+                               {% csrf_token %}
+                             <button type="submit" class="btn btn-sm btn-outline-danger">Выйти</button>
+                             </form>
+                            </div>
+                    <h1 class="h2">{% block header %}Панель управления{% endblock %}</h1>
+                </div>
+
+                {% block content %}
+                <!-- Сюда будет вставляться контент страниц -->
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 (JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

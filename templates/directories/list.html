@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Справочники | HR-Система{% endblock %}
+{% block header %}Справочники{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs mb-4" id="dirTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dept" type="button">Подразделения</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pos" type="button">Должности</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#prof" type="button">Профессии</button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- Вкладка: Подразделения -->
+    <div class="tab-pane fade show active" id="dept">
+        <div class="card shadow">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Подразделения</h5>
+                <button class="btn btn-sm btn-primary" hx-get="{% url 'dept_add_modal' %}" hx-target="#modal-container" hx-on::after-request="bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-container')).show()">
+                    <i class="bi bi-plus-lg"></i> Добавить
+                </button>
+            </div>
+            <div class="card-body p-0" id="dept-table-container">
+                {% include 'directories/partials/dept_table.html' %}
+            </div>
+        </div>
+    </div>
+    <!-- Вкладка: Должности -->
+    <div class="tab-pane fade" id="pos">
+        <div class="card shadow">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Должности</h5>
+                <button class="btn btn-sm btn-primary" hx-get="{% url 'pos_add_modal' %}" hx-target="#modal-container" hx-on::after-request="bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-container')).show()">
+                    <i class="bi bi-plus-lg"></i> Добавить
+                </button>
+            </div>
+            <div class="card-body p-0" id="pos-table-container">
+                {% include 'directories/partials/pos_table.html' %}
+            </div>
+        </div>
+    </div>
+    <!-- Вкладка: Профессии -->
+    <div class="tab-pane fade" id="prof">
+        <div class="card shadow">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Профессии</h5>
+                <button class="btn btn-sm btn-primary" hx-get="{% url 'prof_add_modal' %}" hx-target="#modal-container" hx-on::after-request="bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-container')).show()">
+                    <i class="bi bi-plus-lg"></i> Добавить
+                </button>
+            </div>
+            <div class="card-body p-0" id="prof-table-container">
+                {% include 'directories/partials/prof_table.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Контейнер для модалок -->
+<div class="modal fade" id="modal-container" tabindex="-1" aria-hidden="true"></div>
+{% endblock %}

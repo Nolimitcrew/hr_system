@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная | HR-Система{% endblock %}
+
+{% block header %}Панель управления{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-primary shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-people"></i> Сотрудники</h5>
+                <p class="card-text fs-2 mb-0">{{ active_employees_count }}</p>
+                <p class="card-text small">Работает в настоящее время</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-success shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> Контракты</h5>
+                <p class="card-text fs-2 mb-0">{{ active_contracts_count }}</p>
+                <p class="card-text small">Действующих контрактов</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-warning text-dark shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-calendar-event"></i> Отпуска</h5>
+                <p class="card-text fs-2 mb-0">{{ vacations_this_month }}</p>
+                <p class="card-text small">Начинаются в этом месяце</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mt-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Последние кадровые события</h5>
+        <a href="{% url 'event_global_list' %}" class="btn btn-sm btn-outline-primary">Все события</a>
+    </div>
+    <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+            {% for event in recent_events %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{% url 'employee_detail' event.employee.pk %}" class="fw-bold text-decoration-none">{{ event.employee.last_name }} {{ event.employee.first_name }}</a>
+                    — {{ event.get_event_type_display }}
+                </div>
+                <span class="text-muted small">{{ event.event_date|date:"d.m.Y" }}</span>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-center text-muted">Событий пока нет.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

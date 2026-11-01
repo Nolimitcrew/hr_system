@@ -1,0 +1,30 @@
+
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Добавить ребенка</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form hx-post="{% url 'child_add_submit' employee.pk %}" hx-target="#children-table-container">
+            <div class="modal-body">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">ФИО ребенка</label>
+                    {{ form.full_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Дата рождения</label>
+                    {{ form.birth_date }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Сотрудники | HR-Система{% endblock %}
+
+{% block header %}Сотрудники{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Список сотрудников</h5>
+    <!-- Кнопка экспорта передает текущие фильтры в URL -->
+    <a href="{% url 'export_employees' %}?q={{ query }}&department={{ current_dept }}&status={{ current_status }}" class="btn btn-success">
+        <i class="bi bi-file-earmark-excel"></i> Выгрузить в Excel
+    </a>
+</div>
+        <!-- Расширенная форма фильтрации -->
+        <form method="get" class="row g-3 align-items-center">
+            <div class="col-md-3">
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="ФИО или ИН...">
+            </div>
+            <div class="col-md-3">
+                <select name="department" class="form-select">
+                    <option value="">Все подразделения</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept.id }}" {% if current_dept == dept.id|stringformat:"s" %}selected{% endif %}>
+                            {{ dept.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="active" {% if current_status == 'active' %}selected{% endif %}>Работает</option>
+                    <option value="fired" {% if current_status == 'fired' %}selected{% endif %}>Уволен (Архив)</option>
+                    <option value="all" {% if current_status == 'all' %}selected{% endif %}>Все сотрудники</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Найти</button>
+            </div>
+        </form>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>ФИО</th>
+                    <th>Должность</th>
+                    <th>Подразделение</th>
+                    <th>Телефон</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>
+                        <a href="{% url 'employee_detail' emp.pk %}" class="text-decoration-none fw-bold">
+                            {{ emp.last_name }} {{ emp.first_name }} {{ emp.middle_name }}
+                        </a>
+                    </td>
+                    <td>{{ emp.position.name }}</td>
+                    <td>{{ emp.department.name }}</td>
+                    <td>{{ emp.phone|default:"-" }}</td>
+                    <td>
+                        {% if emp.is_active %}
+                            <span class="badge bg-success">Работает</span>
+                        {% else %}
+                            <span class="badge bg-danger">Уволен</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">
+                        По вашему запросу сотрудников не найдено.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
