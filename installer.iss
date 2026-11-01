@@ -26,7 +26,7 @@ Source: "postgresql-18.6-5-windows-x64.exe"; DestDir: "{tmp}"; Flags: deleteafte
 [Run]
 ; 1. ТИХАЯ УСТАНОВКА POSTGRESQL (Версия 18)
 Filename: "{tmp}\postgresql-18.6-5-windows-x64.exe"; \
-Parameters: "--mode unattended --unattendedmodeui minimal --superpassword postgres --servicename postgresql-x64-18 --serverport 5432"; \
+Parameters: "--mode unattended --unattendedmodeui minimal --superpassword postgres --servicename postgresql-x64-18 --serverport 5432  --prefix ""{commonpf}\PostgreSQL\18"""; \
 StatusMsg: "Установка базы данных PostgreSQL (это может занять несколько минут)..."; \
 Flags: waituntilterminated
 
