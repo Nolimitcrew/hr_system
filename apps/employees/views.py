@@ -11,6 +11,7 @@ from apps.directories.models import Department
 import openpyxl
 from openpyxl.styles import Font, Alignment, PatternFill
 from django.http import HttpResponse
+from .forms import ChildForm, ChildEditForm
 
 def employee_list(request):
     """Список сотрудников с расширенным поиском и фильтрами"""
@@ -173,3 +174,39 @@ def export_employees_excel(request):
     response['Content-Disposition'] = 'attachment; filename="employees_export.xlsx"'
     wb.save(response)
     return response
+
+
+def child_edit_modal(request, child_pk):
+    """Возвращает модальное окно для редактирования ребенка"""
+    child = get_object_or_404(Child, pk=child_pk)
+    form = ChildEditForm(instance=child)
+    return render(request, 'employees/partials/child_edit_modal.html', {'form': form, 'child': child})
+
+
+def child_edit_submit(request, child_pk):
+    """Обрабатывает редактирование ребенка"""
+    child = get_object_or_404(Child, pk=child_pk)
+    employee = child.employee
+
+    if request.method == 'POST':
+        form = ChildEditForm(request.POST, instance=child)
+        if form.is_valid():
+            form.save()
+            children = employee.children.all()
+            response = render(request, 'employees/partials/children_table.html',
+                              {'children': children, 'employee': employee})
+            response['HX-Trigger'] = 'closeModal'
+            return response
+        return render(request, 'employees/partials/child_edit_modal.html', {'form': form, 'child': child})
+    return HttpResponse(status=405)
+
+
+def child_delete(request, child_pk):
+    """Удаляет ребенка"""
+    child = get_object_or_404(Child, pk=child_pk)
+    employee = child.employee
+    if request.method == 'POST':
+        child.delete()
+        children = employee.children.all()
+        return render(request, 'employees/partials/children_table.html', {'children': children, 'employee': employee})
+    return HttpResponse(status=405)

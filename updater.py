@@ -21,7 +21,7 @@ def check_for_updates():
         response = requests.get(url, timeout=5)
         if response.status_code == 200:
             data = response.json()
-            latest_version_str = data['tag_name'].replace('v', '')  # Убираем 'v' из 'v1.0.1'
+            latest_version_str = data['tag_name'].replace('v', '')
 
             try:
                 # ✅ Корректное сравнение версий
@@ -47,15 +47,13 @@ def download_and_install(url):
     installer_path = os.path.join(temp_dir, "HR_System_Update.exe")
 
     try:
-        # ✅ Добавляем заголовки и allow_redirects=True, чтобы следовать перенаправлениям GitHub
+        # ✅ Заголовки и allow_redirects для корректного скачивания с GitHub
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             'Accept': 'application/octet-stream'
         }
-        # ✅ Добавляем таймауты (соединение, чтение), чтобы не ждать бесконечно
         with requests.get(url, headers=headers, stream=True, allow_redirects=True, timeout=(10, 30)) as r:
             r.raise_for_status()
-            # Проверяем, что скачивается файл, а не HTML-страница
             if 'text/html' in r.headers.get('Content-Type', ''):
                 print("Ошибка: получен HTML вместо файла. Проверьте ссылку на релиз.")
                 return
@@ -66,7 +64,7 @@ def download_and_install(url):
                         f.write(chunk)
 
         print("Запуск установки обновления...")
-        # Используем os.startfile для более надежного запуска на Windows
+        # ✅ Запуск в полностью тихом режиме
         os.startfile(installer_path, 'open', '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART')
 
         time.sleep(3)  # Даем установщику время перехватить управление
@@ -75,6 +73,7 @@ def download_and_install(url):
     except Exception as e:
         print(f"Ошибка при скачивании обновления: {e}")
         input("Нажмите Enter для продолжения работы...")
+
 
 def run_update_check():
     """Основная функция, вызываемая при старте"""

@@ -9,15 +9,15 @@ class VacationAccrualForm(forms.ModelForm):
             'work_year': forms.Select(attrs={'class': 'form-select'}),
             'days': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.5'}),
             'reason': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Например: Основной отпуск'}),
-            'date_accrued': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_accrued': forms.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
-        # Передаем сотрудника, чтобы отфильтровать его рабочие годы
         employee = kwargs.pop('employee', None)
         super().__init__(*args, **kwargs)
         if employee:
             self.fields['work_year'].queryset = employee.work_years.all()
+        self.fields['date_accrued'].widget.format = '%Y-%m-%d'
 
 class VacationForm(forms.ModelForm):
     class Meta:
@@ -25,9 +25,14 @@ class VacationForm(forms.ModelForm):
         fields = ['vacation_type', 'start_date', 'end_date', 'days', 'status', 'document_number']
         widgets = {
             'vacation_type': forms.Select(attrs={'class': 'form-select'}),
-            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'start_date': forms.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'}),
+            'end_date': forms.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'}),
             'days': forms.NumberInput(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'document_number': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['start_date'].widget.format = '%Y-%m-%d'
+        self.fields['end_date'].widget.format = '%Y-%m-%d'

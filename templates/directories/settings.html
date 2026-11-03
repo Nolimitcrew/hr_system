@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Настройки | HR-Система{% endblock %}
+{% block header %}Настройки организации{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-body">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-8">
+                    <h5 class="mb-3 border-bottom pb-2">Общие данные</h5>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.name.label }}</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.address.label }}</label>
+                        {{ form.address }}
+                    </div>
+
+                    <h5 class="mb-3 border-bottom pb-2 mt-4">Сетевые настройки</h5>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.port.label }}</label>
+                        {{ form.port }}
+                        <div class="form-text text-muted small">{{ form.port.help_text }}</div>
+                    </div>
+
+                    <h5 class="mb-3 border-bottom pb-2 mt-4">Интеграция с Telegram</h5>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.telegram_bot_token.label }}</label>
+                        {{ form.telegram_bot_token }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.telegram_chat_id.label }}</label>
+                        {{ form.telegram_chat_id }}
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Сохранить настройки</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

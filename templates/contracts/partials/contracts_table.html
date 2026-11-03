@@ -6,6 +6,7 @@
             <th>Дата начала</th>
             <th>Дата окончания</th>
             <th>Статус</th>
+            <th class="text-end">Действия</th>
         </tr>
     </thead>
     <tbody>
@@ -22,9 +23,17 @@
                     <span class="badge bg-secondary">Закрыт</span>
                 {% endif %}
             </td>
+            <td class="text-end">
+                <button class="btn btn-sm btn-outline-primary"
+                        hx-get="{% url 'contract_edit_modal' c.pk %}"
+                        hx-target="#modal-container"
+                        hx-on::after-request="bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-container')).show()">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </td>
         </tr>
         {% empty %}
-        <tr><td colspan="5" class="text-center text-muted py-3">Нет контрактов</td></tr>
+        <tr><td colspan="6" class="text-center text-muted py-3">Нет контрактов</td></tr>
         {% endfor %}
     </tbody>
 </table>

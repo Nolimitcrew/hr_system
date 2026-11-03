@@ -56,3 +56,26 @@ def prof_add_submit(request):
             return response
         return render(request, 'directories/partials/prof_modal.html', {'form': form})
     return HttpResponse(status=405)
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import OrganizationSettings
+from .forms import OrganizationSettingsForm
+
+
+def settings_view(request):
+    """Страница настроек организации"""
+    # Берем первую запись настроек, если её нет — создаем пустую
+    settings_obj, created = OrganizationSettings.objects.get_or_create(pk=1)
+
+    if request.method == 'POST':
+        form = OrganizationSettingsForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Настройки успешно сохранены! Если вы изменили порт, перезапустите программу.")
+            return redirect('settings_view')
+    else:
+        form = OrganizationSettingsForm(instance=settings_obj)
+
+    return render(request, 'directories/settings.html', {'form': form})

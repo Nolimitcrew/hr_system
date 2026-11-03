@@ -24,8 +24,11 @@ from .models import OrganizationSettings # Добавьте в импорты с
 
 @admin.register(OrganizationSettings)
 class OrganizationSettingsAdmin(admin.ModelAdmin):
+    # Указываем путь к нашему кастомному шаблону
+    change_form_template = 'admin/directories/organizationsettings/change_form.html'
+
     def has_add_permission(self, request):
-        # Разрешаем создать только одну запись настроек
+        # Разрешаем создать только одну запись
         if OrganizationSettings.objects.exists():
             return False
         return True

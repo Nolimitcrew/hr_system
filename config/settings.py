@@ -21,15 +21,13 @@ else:
 # Загружаем .env из папки с EXE-файлом (или из корня проекта)
 load_dotenv(BASE_DIR / ".env")
 
-
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-insecure-key")
 
-# Для EXE-программы лучше оставить DEBUG=True, чтобы Django сам отдавал статику
+# Для EXE-программы лучше оставить DEBUG=True, чтобы Django отдавал ошибки
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
 # Разрешаем подключение с локального компьютера
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -52,7 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- WhiteNoise для статики в EXE
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,7 +65,6 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Ищем шаблоны в распакованной папке (для EXE) или в корне (для PyCharm)
         'DIRS': [BUNDLE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -82,7 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 DATABASES = {
     "default": {
@@ -95,14 +91,12 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-
 
 # Internationalization
 LANGUAGE_CODE = "ru-ru"
@@ -116,12 +110,13 @@ SHORT_DATE_FORMAT = "d.m.Y"
 DATETIME_FORMAT = "d.m.Y H:i"
 SHORT_DATETIME_FORMAT = "d.m.Y H:i"
 
-
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
-# Берем статику из распакованной папки (для EXE) или из корня (для PyCharm)
 STATICFILES_DIRS = [BUNDLE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Настройки WhiteNoise для раздачи статики в EXE
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -131,6 +126,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Авторизация
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-# Настройки WhiteNoise для раздачи статики в EXE
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'

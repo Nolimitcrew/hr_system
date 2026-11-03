@@ -4,6 +4,7 @@
             <th>ФИО ребенка</th>
             <th>Дата рождения</th>
             <th>Возраст</th>
+            <th class="text-end">Действия</th>
         </tr>
     </thead>
     <tbody>
@@ -12,9 +13,26 @@
             <td>{{ child.full_name }}</td>
             <td>{{ child.birth_date|date:"d.m.Y" }}</td>
             <td>{{ child.birth_date|timesince }}</td>
+            <td class="text-end">
+                <!-- Кнопка редактирования -->
+                <button class="btn btn-sm btn-outline-primary"
+                        hx-get="{% url 'child_edit_modal' child.pk %}"
+                        hx-target="#modal-container"
+                        hx-on::after-request="bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-container')).show()">
+                    <i class="bi bi-pencil"></i>
+                </button>
+
+                <!-- Кнопка удаления -->
+                <button class="btn btn-sm btn-outline-danger"
+                        hx-post="{% url 'child_delete' child.pk %}"
+                        hx-target="#children-table-container"
+                        hx-confirm="Вы уверены, что хотите удалить этого ребенка?">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
         </tr>
         {% empty %}
-        <tr><td colspan="3" class="text-center text-muted py-3">Нет данных о детях</td></tr>
+        <tr><td colspan="4" class="text-center text-muted py-3">Нет данных о детях</td></tr>
         {% endfor %}
     </tbody>
 </table>

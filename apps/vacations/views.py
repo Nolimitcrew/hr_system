@@ -98,3 +98,54 @@ def _render_vacation_tab(request, employee):
     })
     response['HX-Trigger'] = 'closeModal'
     return response
+
+# --- Редактирование и удаление Начислений ---
+def accrual_edit_modal(request, accrual_pk):
+    accrual = get_object_or_404(VacationAccrual, pk=accrual_pk)
+    form = VacationAccrualForm(instance=accrual, employee=accrual.employee)
+    return render(request, 'vacations/partials/accrual_edit_modal.html', {'form': form, 'accrual': accrual})
+
+def accrual_edit_submit(request, accrual_pk):
+    accrual = get_object_or_404(VacationAccrual, pk=accrual_pk)
+    employee = accrual.employee
+    if request.method == 'POST':
+        form = VacationAccrualForm(request.POST, instance=accrual, employee=employee)
+        if form.is_valid():
+            form.save()
+            return _render_vacation_tab(request, employee)
+        return render(request, 'vacations/partials/accrual_edit_modal.html', {'form': form, 'accrual': accrual})
+    return HttpResponse(status=405)
+
+def accrual_delete(request, accrual_pk):
+    accrual = get_object_or_404(VacationAccrual, pk=accrual_pk)
+    employee = accrual.employee
+    if request.method == 'POST':
+        accrual.delete()
+        return _render_vacation_tab(request, employee)
+    return HttpResponse(status=405)
+
+
+# --- Редактирование и удаление Отпусков ---
+def vacation_edit_modal(request, vacation_pk):
+    vacation = get_object_or_404(Vacation, pk=vacation_pk)
+    form = VacationForm(instance=vacation)
+    return render(request, 'vacations/partials/vacation_edit_modal.html', {'form': form, 'vacation': vacation})
+
+def vacation_edit_submit(request, vacation_pk):
+    vacation = get_object_or_404(Vacation, pk=vacation_pk)
+    employee = vacation.employee
+    if request.method == 'POST':
+        form = VacationForm(request.POST, instance=vacation)
+        if form.is_valid():
+            form.save()
+            return _render_vacation_tab(request, employee)
+        return render(request, 'vacations/partials/vacation_edit_modal.html', {'form': form, 'vacation': vacation})
+    return HttpResponse(status=405)
+
+def vacation_delete(request, vacation_pk):
+    vacation = get_object_or_404(Vacation, pk=vacation_pk)
+    employee = vacation.employee
+    if request.method == 'POST':
+        vacation.delete()
+        return _render_vacation_tab(request, employee)
+    return HttpResponse(status=405)

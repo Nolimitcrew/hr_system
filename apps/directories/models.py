@@ -49,6 +49,10 @@ class OrganizationSettings(models.Model):
     """Глобальные настройки организации (должна быть только одна запись)"""
     name = models.CharField(max_length=200, verbose_name="Название организации")
     address = models.TextField(blank=True, verbose_name="Юридический адрес")
+
+    port = models.IntegerField(default=8000, verbose_name="Порт для программы",
+                               help_text="По умолчанию 8000. Меняйте, только если этот порт занят другой программой.")
+
     telegram_bot_token = models.CharField(
         max_length=200,
         blank=True,
