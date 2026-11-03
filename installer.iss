@@ -1,6 +1,6 @@
 [Setup]
 AppName=HR-Система
-AppVersion=1.4.1
+AppVersion=1.4.2
 AppPublisher=Ваша Организация
 DefaultDirName={autopf}\HR_System
 DefaultGroupName=HR-Система
